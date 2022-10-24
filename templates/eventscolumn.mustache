@@ -1,0 +1,73 @@
+{{!
+    This file is part of mod_journaldeclasse - https://numethic.education/
+
+    mod_journaldeclasse is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    mod_journaldeclasse is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with mod_journaldeclasse.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_journaldeclasse/eventscolumn
+
+    This is the main view of the journaldeclasse activity.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * none
+
+}}
+<div class="mod-journaldeclasse-entry">
+    <div class="mod-journaldeclasse-event-period d-flex justify-content-between">
+        <span>{{period.start}}-{{period.end}}</span>
+        {{#editmode}}
+        <span>
+            <a href="?editentry={{id}}">{{#pix}} i/edit, core, Edit this event {{/pix}}</a>
+        </span>
+        {{/editmode}}
+    </div>
+    <div class="mod-journaldeclasse-event-title">
+        {{title}}
+    </div>
+    {{#description}}
+    <div class="mod-journaldeclasse-read-more">
+        <a
+            href="#"
+            data-toggle="modal"
+            data-target="#mod-journaldeclasse-description-{{id}}"
+        >
+            Lire plus…
+        </a>
+        <div class="modal" tabindex="-1" id="mod-journaldeclasse-description-{{id}}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{title}} ({{date}})</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{description}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/description}}
+</div>

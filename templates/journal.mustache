@@ -1,0 +1,135 @@
+{{!
+    This file is part of mod_journaldeclasse - https://numethic.education/
+
+    mod_journaldeclasse is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    mod_journaldeclasse is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with mod_journaldeclasse.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_journaldeclasse/journal
+
+    This is the main view of the journaldeclasse activity.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * activityid
+
+}}
+<div class="row d-flex justify-content-between">
+    <div class="col-sm">
+
+    </div>
+    <div class="col-sm">
+        <div class="form-group form-inline ml-3 mr-3">
+            <label class="d-none d-md-inline" for="change-date">Date</label>
+            <input type="hidden" name="id" value="{{coursemoduleid}}" />
+            <div class="input-group">
+                <input
+                    id="change-date"
+                    type="date"
+                    class="form-control ml-sm-2"
+                    name="change-date"
+                    value="{{lastday.day}}"
+                />
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-change-date">
+                        {{#pix }} i/search, core, Change date {{/pix}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+        {{> core/search_input }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        <h3 class="mod-journaldeclasse-column-head">{{daybefore.day}}</h3>
+        {{#daybefore.entries}}
+        {{> journaldeclasse/eventscolumn }}
+        {{/daybefore.entries}}
+    </div>
+    <div class="col-sm">
+        <h3 class="mod-journaldeclasse-column-head">{{lastday.day}}</h3>
+        {{#lastday.entries}}
+        {{> journaldeclasse/eventscolumn }}
+        {{/lastday.entries}}
+    </div>
+    <div class="col-sm">
+        <h3 class="mod-journaldeclasse-column-head">Next events</h3>
+        {{#futureevents}}
+        <div class="mod-journaldeclasse-entry">
+            <div class="mod-journaldeclasse-event-date d-flex justify-content-between">
+                <span>{{date}}</span>
+                {{#editmode}}
+                <a href="#">{{#pix}} i/edit, core, Edit this event {{/pix}}</a>
+                {{/editmode}}
+            </div>
+            <div class="mod-journaldeclasse-event-title">
+                {{title}}
+            </div>
+            {{#description}}
+            <div class="mod-journaldeclasse-read-more">
+                <a
+                    href="#"
+                    data-toggle="modal"
+                    data-target="#mod-journaldeclasse-description-{{id}}"
+                >
+                    Lire plus…
+                </a>
+                <div class="modal" tabindex="-1" id="mod-journaldeclasse-description-{{id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{title}} ({{date}})</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {{description}}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/description}}
+        </div>
+        {{/futureevents}}
+    </div>
+</div>
+<style>
+    .mod-journaldeclasse-event-period {
+        font-size: small;
+        color: gray;
+    }
+    .mod-journaldeclasse-entry {
+        background-color: rgba(50, 50, 50, 0.1);
+        margin:0.3em 0px;
+        padding: 0px 0.2em;
+    }
+    .mod-journaldeclasse-read-more {
+        text-align: right;
+    }
+    .mod-journaldeclasse-entry .modal-body {
+        text-align: justify;
+    }
+</style>
