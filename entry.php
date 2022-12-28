@@ -25,25 +25,26 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 
-// Entry module id.
+// Journaldeclasse entry module id.
 $id = optional_param('id', 0, PARAM_INT);
-// $j = optional_param('j', 0, PARAM_INT);
+// Course module id.
+$coursemoduleid = required_param('coursemoduleid', PARAM_INT);
+
+echo '<br><br><br>';
+echo var_dump($coursemoduleid);
+
+$cm = get_coursemodule_from_id('journaldeclasse', 2, 0, false, MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 if ($id) {
-    // $entry = get_coursemodule_from_id('journaldeclasse__entry', $id, 0, false, MUST_EXIST);
-    // $cm = get_coursemodule_from_id('journaldeclasse', $entry->cm, 0, false, MUST_EXIST);
-    // $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    // $moduleinstance = $DB->get_record('journaldeclasse', array('id' => $cm->instance), '*', MUST_EXIST);
+    $entry = $DB->get_record('journaldeclasse_entry', array('id' => $id));
 } else {
-    // $moduleinstance = $DB->get_record('journaldeclasse', array('id' => $j), '*', MUST_EXIST);
-    // $course = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
-    // $cm = get_coursemodule_from_instance('journaldeclasse', $moduleinstance->id, $course->id, false, MUST_EXIST);
+    $entry = array();
 }
 
-// require_login($course, true, $cm);
+require_login($course, true, $cm);
 
-// $modulecontext = context_module::instance($cm->id);
-
+$modulecontext = context_module::instance($cm->id);
 
 $PAGE->set_url(
     '/mod/journaldeclasse/entry.php',
@@ -52,8 +53,6 @@ $PAGE->set_url(
 // $PAGE->set_title(format_string($moduleinstance->name));
 // $PAGE->set_heading(format_string($course->fullname));
 // $PAGE->set_context($modulecontext);
-
-$body = $OUTPUT->render_from_template("journaldeclasse/entry");
 
 echo $OUTPUT->header();
 
