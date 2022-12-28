@@ -31,6 +31,13 @@ $id = optional_param('id', 0, PARAM_INT);
 // Activity instance id.
 $j = optional_param('j', 0, PARAM_INT);
 
+// Last date to show.
+$day = optional_param(
+    'day',
+    (new DateTime('now', core_date::get_user_timezone_object()))->format('Y-m-d'),
+    PARAM_NOTAGS
+);
+
 if ($id) {
     $cm = get_coursemodule_from_id('journaldeclasse', $id, 0, false, MUST_EXIST);
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -45,7 +52,7 @@ require_login($course, true, $cm);
 
 $modulecontext = context_module::instance($cm->id);
 
-$event = \mod_journaldeclasse\event\course_module_viewed::create(array(
+$event = mod_journaldeclasse\event\course_module_viewed::create(array(
     'objectid' => $moduleinstance->id,
     'context' => $modulecontext
 ));
@@ -60,82 +67,28 @@ $PAGE->set_context($modulecontext);
 
 $editmode = $PAGE->user_is_editing();
 
+$day_before = (new DateTime($day))->sub(new DateInterval('P1D'))->format('Y-m-d');
+$entry_set = new \mod_journaldeclasse\entry_set($day, $id);
+
 $data = [
     'editmode' => $editmode,
     'coursemoduleid' => $id,
     'lastday' => [
-        'day' => '2022-10-24',
-        'entries' => [
-            0 => [
-                'id' => 1,
-                'date' => '2022-10-24',
-                'title' => 'Théorème des résidus',
-                'description' => 'Repellendus omnis et beatae nostrum sit. Ipsum tempore a qui necessitatibus. Maxime atque error atque est fugiat laborum eum. Placeat maxime doloribus inventore veritatis neque. Quae occaecati sit sed itaque eos dolorem assumenda. Tempora quia id nihil a',
-                'period' => [
-                    'start' => '8h30',
-                    'end' => '10h00',
-                ]
-            ],
-            1 => [
-                'id' => 2,
-                'date' => '2022-10-24',
-                'title' => 'Examen compliqué',
-                'description' => '',
-                'period' => [
-                    'start' => '11h30',
-                    'end' => '12h00',
-                ]
-            ],
-        ]
+        'day' => $day,
+        'entries' => $entry_set->current_day,
     ],
     'daybefore' => [
-        'day' => '2022-23-10',
-        'entries' => [
-            0 => [
-                'id' => 4,
-                'date' => '2022-23-10',
-                'title' => 'Lemme des résidus',
-                'description' => 'Repellendus omnis et beatae nostrum sit. Ipsum tempore a qui necessitatibus. Maxime atque error atque est fugiat laborum eum. Placeat maxime doloribus inventore veritatis neque. Quae occaecati sit sed itaque eos dolorem assumenda. Tempora quia id nihil a',
-                'period' => [
-                    'start' => '8h30',
-                    'end' => '10h00',
-                ]
-            ],
-            1 => [
-                'id' => 5,
-                'date' => '2022-10-24',
-                'title' => 'Examen simple',
-                'description' => '',
-                'period' => [
-                    'start' => '8h30',
-                    'end' => '10h00',
-                ]
-            ],
-        ]
+        'day' => $day_before,
+        'entries' => $entry_set->past_day,
     ],
-    'futureevents' => [
-        0 => [
-            'id' => 3,
-            'date' => '2022-25-10',
-            'title' => 'Devoir',
-            'description' => 'Repellendus omnis et beatae nostrum sit. Ipsum tempore a qui necessitatibus. Maxime atque error atque est fugiat laborum eum. Placeat maxime doloribus inventore veritatis neque. Quae occaecati sit sed itaque eos dolorem assumenda. Tempora quia id nihil a',
-            'period' => [
-                'start' => '8h30',
-                'end' => '10h00',
-            ]
-        ],
-        1 => [
-            'id' => 3,
-            'date' => '2022-11-11',
-            'title' => 'Examen simple et compliqué',
-            'description' => '',
-            'period' => [
-                'start' => '8h30',
-                'end' => '10h00',
-            ]
-        ],
+    'futureevents' => $entry_set->future_events,
+    'searchcontext' => [
+        'searchstring' => 'Rechercher une entrée…',
+        'hiddenfields' => [
+            ['name' => 'id', 'value' => $id],
+            ['name' => 'day', 'value' => $day],
+        ]
     ]
-
 ];
 
 $body = $OUTPUT->render_from_template("journaldeclasse/journal", $data);

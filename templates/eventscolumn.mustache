@@ -34,7 +34,7 @@
         <span>{{period.start}}-{{period.end}}</span>
         {{#editmode}}
         <span>
-            <a href="?editentry={{id}}">{{#pix}} i/edit, core, Edit this event {{/pix}}</a>
+            <a href="/mod/journaldeclasse/entry.php?id={{id}}&coursemoduleid={{coursemoduleid}}">{{#pix}} i/edit, core, Edit this event {{/pix}}</a>
         </span>
         {{/editmode}}
     </div>
@@ -54,7 +54,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{title}} ({{date}})</h5>
+                    <h5 class="modal-title">{{title}} ({{date_entry}})</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

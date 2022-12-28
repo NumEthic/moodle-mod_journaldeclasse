@@ -34,7 +34,7 @@
 
     </div>
     <div class="col-sm">
-        <div class="form-group form-inline ml-3 mr-3">
+        <form class="form-group form-inline ml-3 mr-3" method="get">
             <label class="d-none d-md-inline" for="change-date">Date</label>
             <input type="hidden" name="id" value="{{coursemoduleid}}" />
             <div class="input-group">
@@ -42,7 +42,7 @@
                     id="change-date"
                     type="date"
                     class="form-control ml-sm-2"
-                    name="change-date"
+                    name="day"
                     value="{{lastday.day}}"
                 />
                 <div class="input-group-append">
@@ -51,10 +51,12 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
     <div class="col-sm">
+        {{#searchcontext}}
         {{> core/search_input }}
+        {{/searchcontext}}
     </div>
 </div>
 <div class="row">
@@ -66,6 +68,7 @@
     </div>
     <div class="col-sm">
         <h3 class="mod-journaldeclasse-column-head">{{lastday.day}}</h3>
+        {{lastday.entries}}
         {{#lastday.entries}}
         {{> journaldeclasse/eventscolumn }}
         {{/lastday.entries}}
@@ -81,7 +84,7 @@
                 {{/editmode}}
             </div>
             <div class="mod-journaldeclasse-event-title">
-                {{title}}
+                <strong>{{date_entry}}</strong>: {{title}}
             </div>
             {{#description}}
             <div class="mod-journaldeclasse-read-more">
@@ -96,7 +99,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">{{title}} ({{date}})</h5>
+                            <h5 class="modal-title">{{title}} ({{date_entry}})</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
