@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_journaldeclasse';
 $plugin->release = '0.1.0';
-$plugin->version = 2022060602;
+$plugin->version = 2022121203;
 $plugin->requires = 2021051700;
 $plugin->maturity = MATURITY_ALPHA;

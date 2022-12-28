@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/journaldeclasse/db" VERSION="20220606" COMMENT="XMLDB file for Moodle mod_journaldeclasse"
+<XMLDB PATH="mod/journaldeclasse/db" VERSION="20221212" COMMENT="XMLDB file for Moodle mod_journaldeclasse"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -17,6 +17,54 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="fk_course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="journaldeclasse_entry" COMMENT="Entries in a journaldeclasse activity.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="date_entry" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="moodle_event" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="entry_journaldeclasse" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="entry_journaldeclasse-id" TYPE="foreign" FIELDS="entry_journaldeclasse" REFTABLE="journaldeclasse" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="journaldeclasse_periodschema" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="45" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="journaldeclasse_period" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="period_start" TYPE="char" LENGTH="5" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="period_end" TYPE="char" LENGTH="5" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="day_of_week" TYPE="char" LENGTH="10" NOTNULL="false" DEFAULT="1-5" SEQUENCE="false"/>
+        <FIELD NAME="period_schema" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="period_schema-id" TYPE="foreign" FIELDS="period_schema" REFTABLE="journaldeclasse_periodschema" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="journaldeclasse_entry_period" COMMENT="Relation between entry and periods (an entry can have several periods).">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="entry_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="period_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="entry-id" TYPE="foreign" FIELDS="entry_id" REFTABLE="journaldeclasse_entry" REFFIELDS="id"/>
+        <KEY NAME="period-id" TYPE="foreign" FIELDS="period_id" REFTABLE="journaldeclasse_period" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

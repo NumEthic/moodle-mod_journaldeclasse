@@ -38,10 +38,95 @@ function xmldb_journaldeclasse_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
-    //
-    // You will also have to create the db/install.xml file by using the XMLDB Editor.
-    // Documentation for the XMLDB Editor can be found at {@link https://docs.moodle.org/dev/XMLDB_editor}.
+    if ($oldversion < 2022111803) {
+
+        // Define table journaldeclasse_entry to be created.
+        $table = new xmldb_table('journaldeclasse_entry');
+
+        // Adding fields to table journaldeclasse_entry.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('date_entry', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('title', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('moodle_event', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        // Adding keys to table journaldeclasse_entry.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for journaldeclasse_entry.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table journaldeclasse_periodschema to be created.
+        $table = new xmldb_table('journaldeclasse_periodschema');
+
+        // Adding fields to table journaldeclasse_periodschema.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '45', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table journaldeclasse_periodschema.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for journaldeclasse_periodschema.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table journaldeclasse_period to be created.
+        $table = new xmldb_table('journaldeclasse_period');
+
+        // Adding fields to table journaldeclasse_period.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('period_start', XMLDB_TYPE_CHAR, '5', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('period_end', XMLDB_TYPE_CHAR, '5', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('day_of_week', XMLDB_TYPE_CHAR, '10', null, null, null, '1-5');
+        $table->add_field('period_schema', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table journaldeclasse_period.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('period_schema-id', XMLDB_KEY_FOREIGN, ['period_schema'], 'journaldeclasse_periodschema', ['id']);
+
+        // Conditionally launch create table for journaldeclasse_period.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table journaldeclasse_entry_period to be created.
+        $table = new xmldb_table('journaldeclasse_entry_period');
+
+        // Adding fields to table journaldeclasse_entry_period.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('entry_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('period_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table journaldeclasse_entry_period.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('entry-id', XMLDB_KEY_FOREIGN, ['entry_id'], 'journaldeclasse_entry', ['id']);
+        $table->add_key('period-id', XMLDB_KEY_FOREIGN, ['period_id'], 'journaldeclasse_period', ['id']);
+
+        // Conditionally launch create table for journaldeclasse_entry_period.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Journaldeclasse savepoint reached.
+        upgrade_mod_savepoint(true, 2022111803, 'journaldeclasse');
+    }
+
+    if ($oldversion < 2022121203) {
+        // Define field id to be added to journaldeclasse_entry.
+        $table = new xmldb_table('journaldeclasse_entry');
+        $field = new xmldb_field('entry_journaldeclasse', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'moodle_event');
+
+        // Conditionally launch add field id.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Journaldeclasse savepoint reached.
+        upgrade_mod_savepoint(true, 2022121203, 'journaldeclasse');
+    }
 
     return true;
 }
