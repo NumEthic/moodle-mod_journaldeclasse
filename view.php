@@ -83,7 +83,7 @@ $data = [
     ],
     'futureevents' => $entry_set->future_events,
     'searchcontext' => [
-        'searchstring' => 'Rechercher une entrée…',
+        'searchstring' => get_string('searchentry', 'mod_journaldeclasse'),
         'hiddenfields' => [
             ['name' => 'id', 'value' => $id],
             ['name' => 'day', 'value' => $day],

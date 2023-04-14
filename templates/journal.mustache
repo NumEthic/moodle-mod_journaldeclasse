@@ -31,11 +31,15 @@
 }}
 <div class="row d-flex justify-content-between">
     <div class="col-sm">
-
+        <a
+            href="/mod/journaldeclasse/entry.php?coursemoduleid={{coursemoduleid}}"
+            class="btn btn-primary w-50 mb-2 mb-sm-0 ml-3">
+            {{#pix }} t/add, core, {{#str}}add, journaldeclasse{{/str}} {{/pix}} {{#str}}add, journaldeclasse{{/str}}
+        </a>
     </div>
     <div class="col-sm">
         <form class="form-group form-inline ml-3 mr-3" method="get">
-            <label class="d-none d-md-inline" for="change-date">Date</label>
+            <label class="d-none d-md-inline" for="change-date">{{#str}}date, journaldeclasse{{/str}}</label>
             <input type="hidden" name="id" value="{{coursemoduleid}}" />
             <div class="input-group">
                 <input
@@ -47,7 +51,7 @@
                 />
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="submit" id="button-change-date">
-                        {{#pix }} i/search, core, Change date {{/pix}}
+                        {{#pix }} i/search, core, {{#str}}changedate, journaldeclasse{{/str}} {{/pix}}
                     </button>
                 </div>
             </div>
@@ -74,13 +78,13 @@
         {{/lastday.entries}}
     </div>
     <div class="col-sm">
-        <h3 class="mod-journaldeclasse-column-head">Next events</h3>
+        <h3 class="mod-journaldeclasse-column-head">{{#str}}nextevents, journaldeclasse{{/str}}</h3>
         {{#futureevents}}
         <div class="mod-journaldeclasse-entry">
             <div class="mod-journaldeclasse-event-date d-flex justify-content-between">
                 <span>{{date}}</span>
                 {{#editmode}}
-                <a href="#">{{#pix}} i/edit, core, Edit this event {{/pix}}</a>
+                <a href="#">{{#pix}} i/edit, core, {{#str}}editentry, journaldeclasse{{/str}} {{/pix}}</a>
                 {{/editmode}}
             </div>
             <div class="mod-journaldeclasse-event-title">
@@ -93,7 +97,7 @@
                     data-toggle="modal"
                     data-target="#mod-journaldeclasse-description-{{id}}"
                 >
-                    Lire plus…
+                    {{#str}}readmore, journaldeclasse{{/str}}
                 </a>
                 <div class="modal" tabindex="-1" id="mod-journaldeclasse-description-{{id}}">
                     <div class="modal-dialog">

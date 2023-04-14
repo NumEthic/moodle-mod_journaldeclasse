@@ -66,18 +66,43 @@ class mod_journaldeclasse_mod_form extends moodleform_mod {
             $this->add_intro_editor();
         }
 
-        // Adding the rest of mod_journaldeclasse settings, spreading all them into this fieldset
-        // ... or adding more fieldsets ('header' elements) if needed for better logic.
-        $mform->addElement('static', 'label1', 'journaldeclassesettings', get_string('journaldeclassesettings', 'mod_journaldeclasse'));
-        $mform->addElement('header', 'journaldeclassefieldset', get_string('journaldeclassefieldset', 'mod_journaldeclasse'));
-
-        // Add standard grading elements.
-        $this->standard_grading_coursemodule_elements();
+        // Add period schema field.
+        $mform->addElement('select', 'journaldeclasse_schema', get_string('periodschema', 'mod_journaldeclasse'));
+        $this->set_period_schema_options();
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
 
         // Add standard buttons.
         $this->add_action_buttons();
+    }
+
+    /**
+     * Add options to the period_schema select form.
+     */
+    private function set_period_schema_options() {
+        global $DB;
+
+        $periodschemas = $this->_form->getElement('journaldeclasse_schema');
+        $hasschema = false;
+        foreach ($DB->get_records('journaldeclasse_periodschema') as $ps) {
+            $hasschema = true;
+            $periodschemas->addOption(
+                $ps->name,
+                $ps->id
+            );
+        }
+
+        // If there is no schema, create an empty one.
+        if (!$hasschema) {
+            $newschemaid = $DB->insert_record(
+                'journaldeclasse_periodschema',
+                array('name' => 'default')
+            );
+            $periodschemas->addOption(
+                'default',
+                $newschemaid
+            );
+        }
     }
 }

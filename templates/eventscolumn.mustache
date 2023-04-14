@@ -34,7 +34,20 @@
         <span>{{period.start}}-{{period.end}}</span>
         {{#editmode}}
         <span>
-            <a href="/mod/journaldeclasse/entry.php?id={{id}}&coursemoduleid={{coursemoduleid}}">{{#pix}} i/edit, core, Edit this event {{/pix}}</a>
+            <a href="/mod/journaldeclasse/entry.php?id={{id}}&coursemoduleid={{coursemoduleid}}">
+                {{#pix}} i/edit, core, {{#str}}editentry, journaldeclasse{{/str}} {{/pix}}
+            </a>
+            <a
+                href="#"
+                data-modal="confirmation"
+                data-modal-title-str='["delete", "core"]'
+                data-modal-content-str='["areyousure"]'
+                data-modal-yes-button-str='["delete", "core"]'
+                data-modal-destination="/mod/journaldeclasse/entry.php?id={{id}}&coursemoduleid={{coursemoduleid}}&delete=1&date={{date_entry}}"
+
+            >
+                {{#pix}} i/delete, core, {{#str}}deleteentry, journaldeclasse{{/str}} {{/pix}}
+            </a>
         </span>
         {{/editmode}}
     </div>
@@ -48,7 +61,7 @@
             data-toggle="modal"
             data-target="#mod-journaldeclasse-description-{{id}}"
         >
-            Lire plus…
+            {{#str}}readmore, journaldeclasse{{/str}}
         </a>
         <div class="modal" tabindex="-1" id="mod-journaldeclasse-description-{{id}}">
             <div class="modal-dialog">
@@ -60,7 +73,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{description}}
+                    {{{description}}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>

@@ -128,5 +128,41 @@ function xmldb_journaldeclasse_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2022121203, 'journaldeclasse');
     }
 
+    if ($oldversion < 2022122901) {
+
+        // Define field description_format to be added to journaldeclasse_entry.
+        $table = new xmldb_table('journaldeclasse_entry');
+        $field = new xmldb_field('description_format', XMLDB_TYPE_INTEGER, '3', null, XMLDB_NOTNULL, null, '1', 'entry_journaldeclasse');
+
+        // Conditionally launch add field description_format.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Journaldeclasse savepoint reached.
+        upgrade_mod_savepoint(true, 2022122901, 'journaldeclasse');
+    }
+
+    if ($oldversion < 2023010201) {
+
+        // Define field journaldeclasse_schema to be added to journaldeclasse.
+        $table = new xmldb_table('journaldeclasse');
+        $field = new xmldb_field('journaldeclasse_schema', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '1', 'introformat');
+
+        // Conditionally launch add field journaldeclasse_schema.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $key = new xmldb_key('journaldeclasse_schema-id', XMLDB_KEY_FOREIGN, ['journaldeclasse_schema'], 'journaldeclasse_periodschema', ['id']);
+
+        // Launch add key journaldeclasse_schema-id.
+        $dbman->add_key($table, $key);
+
+        // Journaldeclasse savepoint reached.
+        upgrade_mod_savepoint(true, 2023010201, 'journaldeclasse');
+    }
+
+
     return true;
 }
